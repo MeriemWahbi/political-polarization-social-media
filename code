@@ -1,0 +1,149 @@
+# ----------------------------
+# Projet : Polarisation Reddit + Macro
+# ----------------------------
+
+library(redditExtractoR)
+library(tidytext)
+library(dplyr)
+library(lubridate)
+library(tidyr)
+library(ggplot2)
+
+# ----------------------------
+# Définition des mots-clés par axe
+# ----------------------------
+
+keywords_polarization <- c("polarization","culture war","radicalization",
+                           "extremism","echo chamber","us vs them")
+
+keywords_woke <- c("woke","social justice","equity","inclusion","diversity",
+                   "systemic racism","anti-woke","cancel culture")
+
+keywords_crisis <- c("economic crisis","inflation","recession","unemployment",
+                     "austerity","inequality","cost of living")
+
+keywords_authoritarian <- c("fascism","authoritarianism","populism",
+                            "illiberal democracy","nationalism")
+
+keywords_information <- c("censorship","misinformation","disinformation",
+                          "fake news","propaganda","media bias","algorithmic bias")
+
+keywords_green_pro <- c("eco-friendly","green","sustainability","climate justice",
+                        "green transition","carbon footprint","renewable energy","greenwashing")
+
+keywords_green_anti <- c("climate hoax")
+
+keywords_repression <- c("supremacy","supremacist","repression")
+
+# ----------------------------
+# Scraping Reddit par axe
+# ----------------------------
+
+collect_threads <- function(keywords_vector) {
+  find_thread_urls(keywords = keywords_vector, period = "year")
+}
+
+threads_list <- list(
+  threads_polarization  = collect_threads(keywords_polarization),
+  threads_woke          = collect_threads(keywords_woke),
+  threads_crisis        = collect_threads(keywords_crisis),
+  threads_authoritarian = collect_threads(keywords_authoritarian),
+  threads_information   = collect_threads(keywords_information),
+  threads_green_pro     = collect_threads(keywords_green_pro),
+  threads_green_anti    = collect_threads(keywords_green_anti),
+  threads_repression    = collect_threads(keywords_repression)
+)
+
+# ----------------------------
+# Fusion de tous les threads
+# ----------------------------
+
+threads_all <- bind_rows(threads_list) %>%
+  distinct(url, .keep_all = TRUE)
+
+# Récupération des commentaires
+comments <- get_thread_content(threads_all$url)
+
+# ----------------------------
+# Dictionnaire multi-axes + gauche/centre/droite
+# ----------------------------
+
+dictionary <- tibble(
+  word = c(
+    keywords_polarization,
+    keywords_woke,
+    keywords_crisis,
+    keywords_authoritarian,
+    keywords_information,
+    keywords_green_pro,
+    keywords_green_anti,
+    keywords_repression
+  ),
+  category = c(
+    rep("polarization", length(keywords_polarization)),
+    rep("woke", length(keywords_woke)),
+    rep("economic_crisis", length(keywords_crisis)),
+    rep("authoritarian", length(keywords_authoritarian)),
+    rep("information", length(keywords_information)),
+    rep("green_pro", length(keywords_green_pro)),
+    rep("green_anti", length(keywords_green_anti)),
+    rep("repression", length(keywords_repression))
+  ),
+  ideology = c(
+    rep("gauche", 6),  # polarisation gauche
+    rep("gauche", 7),  # woke
+    rep("centre", 7),  # crise économique
+    rep("droite", 5),  # authoritarian
+    rep("centre", 7),  # information
+    rep("gauche", 8),  # green pro
+    rep("droite", 1),  # green anti
+    rep("droite", 3)   # repression
+  )
+)
+
+# ----------------------------
+#  Analyse textuelle
+# ----------------------------
+
+tidy_comments <- comments %>%
+  unnest_tokens(word, comment)
+
+ideology_mentions <- tidy_comments %>%
+  inner_join(dictionary, by = "word") %>%
+  mutate(month = floor_date(as.Date(created), "month")) %>%
+  count(month, ideology)
+
+# ----------------------------
+#  Création de l’indicateur synthétique de polarisation
+# ----------------------------
+
+polarization_index <- ideology_mentions %>%
+  pivot_wider(names_from = ideology, values_from = n, values_fill = 0) %>%
+  mutate(
+    total = gauche + centre + droite,
+    prop_gauche = gauche/total,
+    prop_centre = centre/total,
+    prop_droite = droite/total,
+    polarization = sd(c(prop_gauche, prop_centre, prop_droite))
+  )
+
+# ----------------------------
+#  Visualisation
+# ----------------------------
+
+ggplot(polarization_index, aes(x=month, y=polarization)) +
+  geom_line(color="darkred", size=1) +
+  theme_minimal() +
+  labs(
+    title = "Indice mensuel de polarisation gauche/centre/droite",
+    x = "Mois",
+    y = "Polarisation (écart-type des proportions)"
+  )
+
+# ----------------------------
+#  Sauvegarde des résultats
+# ----------------------------
+
+saveRDS(threads_all, "data/clean/threads_all.rds")
+saveRDS(comments, "data/clean/comments.rds")
+saveRDS(polarization_index, "data/clean/polarization_index.rds")
