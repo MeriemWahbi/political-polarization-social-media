@@ -1,0 +1,76 @@
+---
+title: "Polarisation politique et réseaux sociaux"
+subtitle: "Une analyse des discussions Reddit et du contexte macroéconomique"
+author: "Meriem WAHBI, Manal REBBAH"
+date: "`r Sys.Date()`"
+output: ioslides_presentation
+---
+
+## Introduction
+
+- Forte montée de la polarisation idéologique
+- Rôle central des réseaux sociaux
+- Question de recherche :
+  
+**Existe-t-il un lien entre polarisation politique en ligne et contexte macroéconomique ?**
+
+---
+
+## Données utilisées
+
+- Reddit : discussions politiques multi-thématiques
+- Google Trends : intérêt public
+- Données macroéconomiques :
+  - inflation
+  - chômage
+
+---
+
+## Méthodologie
+
+1. Collecte automatique des données
+2. Nettoyage et analyse textuelle
+3. Classification idéologique :
+   - gauche
+   - centre
+   - droite
+4. Construction d’un indicateur de polarisation
+5. Analyse temporelle
+
+---
+
+## Indicateur de polarisation
+
+- Basé sur la fréquence des mots idéologiques
+- Mesure la domination relative des discours
+- Approche quantitative et reproductible
+
+---
+
+## Résultats principaux
+
+- Hausse de la polarisation lors des périodes de crise
+- Corrélation entre inflation et intensité des discours extrêmes
+- Rôle amplificateur des réseaux sociaux
+
+---
+
+## Limites
+
+- Classification lexicale simplifiée
+- Biais de représentativité de Reddit
+- Pas d’analyse causale stricte
+
+---
+
+## Conclusion
+
+- Les réseaux sociaux reflètent et amplifient les tensions politiques
+- Le contexte macroéconomique joue un rôle clé
+- Pistes futures :
+  - NLP avancé
+  - analyse multi-plateformes
+
+---
+
+## Merci de votre attention
