@@ -2,12 +2,38 @@
 # Projet : Polarisation Reddit + Macro
 # ----------------------------
 
+# Télechargement des données
+
+install.packages("RedditExtractoR")
 library(redditExtractoR)
+
+install.packages("gtrendsR")
+library(gtrendsR)
+
+install.packages("fredr")
+library(fredr)
+
+install.packages("eurostat")
+library(eurostat)
+
 library(tidytext)
 library(dplyr)
 library(lubridate)
 library(tidyr)
 library(ggplot2)
+
+# ----------------------------
+# Définition des mots-clés
+# ----------------------------
+
+# Inflation 
+inflation_us <- fredr(series_id = "CPIAUCSL")
+inflation_eu <- get_eurostat("prc_hicp_midxp")
+
+# Chômage
+unemp_us <- fredr(series_id = "UNRATE")
+unemp_eu <- get_eurostat("une_rt_m", time_format = "date")
+
 
 # ----------------------------
 # Définition des mots-clés par axe
