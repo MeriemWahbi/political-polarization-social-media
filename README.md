@@ -1,10 +1,14 @@
 # Polarisation politique sur Reddit et contexte macroéconomique
 
 ## Présentation du projet
-Ce projet de data analyse étudie la polarisation politique sur les réseaux sociaux, à partir des discussions publiées sur Reddit, et analyse son lien avec le contexte macroéconomique.  
-Dans un contexte marqué par l’intensification des débats idéologiques et la montée des tensions politiques, les réseaux sociaux sont aujourd’hui un espace central de production et de diffusion des opinions politiques.  
+Depuis l’essor des réseaux sociaux, certaines plateformes sont devenues de véritables chambres d’écho pour les sujets politiques. Les utilisateurs y sont souvent exposés à des contenus qui confortent leurs opinions, tandis que les algorithmes amplifient ces tendances, renforçant la polarisation idéologique et parfois la radicalisation.
 
-L’objectif du projet est de proposer une mesure quantitative de la polarisation idéologique en ligne et d’examiner son évolution dans le temps en relation avec les chocs et dynamiques économiques.
+Ce projet vise à quantifier la polarisation politique sur Reddit et à analyser ses liens avec des indicateurs macroéconomiques tels que l’inflation et le chômage. Nous classons les publications et commentaires selon les axes politiques gauche, centre et droite, afin d’étudier comment les discussions évoluent dans différents contextes économiques.
+
+Grâce à des méthodes de traitement automatique du langage (NLP) et d’analyse statistique, le projet explore si les périodes de tension économique coïncident avec une augmentation de la polarisation et identifie les mécanismes qui influencent les débats en ligne.
+
+###Problématique:
+Comment la polarisation idéologique sur Reddit évolue-t-elle en lien avec les fluctuations macroéconomiques, et quelles tendances peut-on observer selon les axes gauche, centre et droite ?
 
 ## Données
 La base principale est constituée de posts et commentaires issus de Reddit, collectés via l’API officielle et des outils de scraping adaptés. Reddit a été choisi en raison de la nature textuelle et argumentative de ses échanges, qui en fait un terrain pertinent pour l’analyse des discours politiques.  
