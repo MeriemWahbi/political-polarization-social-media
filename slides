@@ -39,15 +39,40 @@ output: ioslides_presentation
 
 ---
 
+## Classification idéologique
+
+- Dictionnaires de mots-clés :
+  - gauche (justice sociale, écologie, inclusion)
+  - droite (autorité, nationalisme, anti-woke)
+  - centre (neutralité, compromis)
+- Attribution d’un score par commentaire
+
+---
+
 ## Indicateur de polarisation
 
 - Basé sur la fréquence des mots idéologiques
 - Mesure la domination relative des discours
 - Approche quantitative et reproductible
 
+- Calcul basé sur la dispersion des parts idéologiques : plus l’écart est élevé → plus la polarisation est forte
 ---
 
 ## Résultats principaux
+
+```{r echo=FALSE}
+library(ggplot2)
+
+polarization_index <- readRDS("data/clean/polarization_index.rds")
+
+ggplot(polarization_index, aes(x = date, y = polarization)) +
+  geom_line() +
+  theme_minimal() +
+  labs(
+    title = "Indice de polarisation politique",
+    x = "Temps",
+    y = "Polarisation"
+  )
 
 - Hausse de la polarisation lors des périodes de crise
 - Corrélation entre inflation et intensité des discours extrêmes
@@ -58,7 +83,7 @@ output: ioslides_presentation
 ## Limites
 
 - Classification lexicale simplifiée
-- Biais de représentativité de Reddit
+- Biais de représentativité et de selection de Reddit
 - Pas d’analyse causale stricte
 
 ---
@@ -69,7 +94,7 @@ output: ioslides_presentation
 - Le contexte macroéconomique joue un rôle clé
 - Pistes futures :
   - NLP avancé
-  - analyse multi-plateformes
+  - analyse multi-plateformes (X, Meta, Youtube, GoogleTrends...)
 
 ---
 
