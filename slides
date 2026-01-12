@@ -1,6 +1,6 @@
 ---
-title: "Polarisation politique et réseaux sociaux"
-subtitle: "Polarisation sur les réseaux (Twitter / X) et contexte macroéconomique"
+title: "Polarisation et réseaux sociaux"
+subtitle: "Polarisation politique sur les réseaux (Twitter / X) et contexte macroéconomique"
 author: "Meriem WAHBI, Manal REBBAH"
 date: "`r Sys.Date()`"
 output: ioslides_presentation
