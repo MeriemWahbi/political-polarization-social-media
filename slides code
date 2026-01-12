@@ -1,0 +1,132 @@
+---
+title: "Polarisation politique et réseaux sociaux"
+subtitle: "Polarisation politique sur les réseaux (Twitter / X) et contexte macroéconomique"
+author: "Meriem WAHBI, Manal REBBAH"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: Madrid
+    colortheme: dolphin
+---
+
+\setbeamertemplate{caption}[numbered]
+
+```{r}
+if (requireNamespace("rstudioapi", quietly = TRUE)) {
+
+# Définit le dossier de travail sur le dossier du Rmd
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+}
+
+```
+
+
+## Introduction
+- Les réseaux sociaux amplifient le débat politique
+- Twitter/X : diffusion rapide et large des opinions
+- Chambres d’écho et radicalisation
+
+---
+
+## Contexte
+- Restrictions temporaires de X lors de crises politiques
+- Algorithmes favorisant contenus émotionnels et clivants
+- Montée de discours extrêmes depuis 2022 (rachat Musk)
+- Biais cognitifs : confirmation, surenchère, provocation
+
+---
+
+## Question de recherche
+- Évolution de la polarisation politique sur X
+- Lien avec tensions macroéconomiques :
+  - Inflation
+  - Chômage
+- Les crises économiques intensifient-elles les discours extrêmes ?
+
+---
+
+## Données
+- Tweets politiques : texte et date
+- Données macroéconomiques : CPI (inflation) et UNRATE (chômage)
+- Source : FRED
+
+---
+
+## Méthodologie
+1. Nettoyage des tweets
+2. Classification idéologique : gauche / centre / droite
+3. Indice de polarisation mensuel
+4. Fusion avec données macro
+5. Analyse descriptive et corrélations
+
+---
+
+## Classification idéologique
+
+- Dictionnaires de mots-clés :
+  - gauche (justice sociale, écologie, inclusion)
+  - droite (autorité, nationalisme, anti-woke)
+  - centre (neutralité, compromis)
+- Attribution d’un score par commentaire
+
+---
+
+## Indicateur de polarisation
+- Basé sur la fréquence des mots idéologiques
+- Asymétrie gauche/droite → plus l’écart est grand, plus la polarisation est forte
+- Indice quantitatif et reproductible
+- Indice élevé :
+  - discours conflictuel
+  - forte polarisation
+- Indice faible :
+  - discours plus modéré
+
+---
+
+## Résultats – Polarisation
+```{r polarisation-plot, echo=FALSE, out.width="85%", fig.align="center"}
+knitr::include_graphics("polari.png")
+
+```
+---
+
+## Résultats – Polarisation
+- Légère augmentation après 2020
+- Pics lors des crises économiques
+- Indice reflète intensité des discours extrêmes
+
+---
+
+## Résultats – Corrélation
+```{r results-correlation, echo=FALSE, out.width="80%"}
+knitr::include_graphics("correlation.png")
+
+```
+---
+
+## Résultats – Corrélation
+- Corrélation positive inflation – polarisation
+- Effet inverse constaté. Contrairement aux attentes, la hausse du chômage n'est pas corrélée positivement à la polarisation 
+- Les tensions économiques et sociales montrent des dynamiques complexes sur les réseaux.
+
+---
+
+## Limites
+- Dictionnaire simplifié pour classification
+- Données issues uniquement de Twitter/X
+- Corrélation, pas de causalité
+
+---
+
+## Conclusion
+- Les réseaux sociaux amplifient les tensions politiques
+- Le contexte macroéconomique joue un rôle clé
+- Pistes futures :
+  - NLP avancé
+  - Analyse multi-plateformes (Reddit, Meta, Youtube, GoogleTrends...)
+  - Indicateurs géopolitiques, d'asymétrie idéologique, d'agenda politique..
+
+---
+
+## Merci de votre attention
