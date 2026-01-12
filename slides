@@ -1,6 +1,6 @@
 ---
 title: "Polarisation politique et réseaux sociaux"
-subtitle: "Une analyse des discussions Reddit et du contexte macroéconomique"
+subtitle: "Polarisation sur les réseaux (Twitter / X) et contexte macroéconomique"
 author: "Meriem WAHBI, Manal REBBAH"
 date: "`r Sys.Date()`"
 output: ioslides_presentation
@@ -8,34 +8,54 @@ output: ioslides_presentation
 
 ## Introduction
 
-- Forte montée de la polarisation idéologique
-- Rôle central des réseaux sociaux
-- Question de recherche :
-  
-**Existe-t-il un lien entre polarisation politique en ligne et contexte macroéconomique ?**
+- Rôle central des réseaux sociaux dans le débat politique
+- X (Twitter) : plateforme clé de diffusion des opinions politiques
+- Accusations récurrentes de création de chambres d’écho
+- Montée de l’extrémisme et des discours polarisés
+
+---
+
+## Contexte
+
+- Restrictions temporaires de X dans plusieurs pays lors de crises politiques
+- Algorithme favorisant les contenus émotionnels et clivants
+- Biais cognitifs : confirmation, surenchère, provocation
+- Débat renforcé depuis le rachat par Elon Musk (2022)
+
+---
+
+## Question de recherche
+
+- Comment évolue la polarisation politique sur X ?
+- Existe-t-il un lien entre polarisation et :
+  - inflation
+  - chômage
+- Les tensions économiques amplifient-elles les discours extrêmes ?
 
 ---
 
 ## Données utilisées
 
-- Reddit : discussions politiques multi-thématiques
-- Google Trends : intérêt public
+- Tweets politiques collectés sur X
+- Contenu textuel et date de publication
+
 - Données macroéconomiques :
-  - inflation
-  - chômage
+  - Inflation (CPI)
+  - Taux de chômage (UNRATE)
+- Source macro : FRED
 
 ---
 
 ## Méthodologie
-
-1. Collecte automatique des données
-2. Nettoyage et analyse textuelle
-3. Classification idéologique :
+1. Nettoyage des tweets
+2. Analyse de sentiment par classification idéologique :
    - gauche
    - centre
    - droite
-4. Construction d’un indicateur de polarisation
-5. Analyse temporelle
+3. Construction d’un indice de polarisation
+4. Agrégation mensuelle
+5. Fusion avec les données macroéconomiques
+6. Analyse descriptive et économétrique
 
 ---
 
@@ -51,11 +71,16 @@ output: ioslides_presentation
 
 ## Indicateur de polarisation
 
-- Basé sur la fréquence des mots idéologiques
-- Mesure la domination relative des discours
 - Approche quantitative et reproductible
+- Basé sur la fréquence des mots idéologiques et l’asymétrie entre sentiments négatifs et positifs
+- Indice élevé :
+  - discours conflictuel
+  - forte polarisation
+- Indice faible :
+  - discours plus modéré
 
 - Calcul basé sur la dispersion des parts idéologiques : plus l’écart est élevé → plus la polarisation est forte
+
 ---
 
 ## Résultats principaux
@@ -74,16 +99,17 @@ ggplot(polarization_index, aes(x = date, y = polarization)) +
     y = "Polarisation"
   )
 
-- Hausse de la polarisation lors des périodes de crise
+- Hausse de la polarisation lors des périodes de crise (2020_2022)
 - Corrélation entre inflation et intensité des discours extrêmes
-- Rôle amplificateur des réseaux sociaux
+- Corrélation positive entre chômage et polarisation
+- => Rôle amplificateur des réseaux sociaux
 
 ---
 
 ## Limites
 
 - Classification lexicale simplifiée
-- Biais de représentativité et de selection de Reddit
+- Données issues d’une seule plateforme
 - Pas d’analyse causale stricte
 
 ---
@@ -94,8 +120,10 @@ ggplot(polarization_index, aes(x = date, y = polarization)) +
 - Le contexte macroéconomique joue un rôle clé
 - Pistes futures :
   - NLP avancé
-  - analyse multi-plateformes (X, Meta, Youtube, GoogleTrends...)
+  - analyse multi-plateformes (Reddit, Meta, Youtube, GoogleTrends...)
+  - indicateurs de tensions géopolitiques, d'intensité d'agenda politique, d'asymétrie ideologique...
 
 ---
 
 ## Merci de votre attention
+
