@@ -1,4 +1,5 @@
 # Polarisation politique sur les réseaux 
+
 ## Analyse des discours politiques sur X (Twitter) et du contexte macroéconomique
 
 
@@ -25,7 +26,7 @@ Ainsi, la problématique centrale de ce projet est la suivante :
 - Données textuelles : contenu des tweets
 - Métadonnées temporelles : date de publication
   
-Les données utilisées ne sont pas collectées directement via l’API officielle de X, dont l’accès est devenu payant et restrictif ces dernières années. Elles proviennent d’un jeu de données secondaire accessible publiquement sur le site nnnnnn , regroupant des tweets collectés antérieurement. Ce choix méthodologique permet de garantir l’accès aux données tout en respectant les contraintes techniques et institutionnelles actuelles de la plateforme
+Les données utilisées ne sont pas collectées directement via l’API officielle de X, dont l’accès est devenu payant et restrictif ces dernières années. Elles proviennent d’un jeu de données secondaire accessible publiquement sur le site KAGGLE , regroupant des tweets collectés antérieurement.
 
 ### 2. Données macroéconomiques 
 - Inflation (indice des prix à la consommation – CPI)
@@ -38,10 +39,11 @@ Les données utilisées ne sont pas collectées directement via l’API officiel
 
 - **`tidyverse`** : pour la manipulation, nettoyage et transformation des données
 - **`tidytext`** : analyse textuelle et analyse de sentiment
-- **`ggplot2`** : visualisation des résultats
-- **`quantmod`** : importation des données macroéconomiques depuis FRED
+- **`GGally`** ou **`ggplot2`** : visualisation des résultats
 - **`lubridate`** : gestion des dates
 - **`rmarkdown`** : génération des slides et du rapport HTML
+- **`readxl`** : lire et accéder aux fichiers excel
+  
 
 ## IV. Outils
 
