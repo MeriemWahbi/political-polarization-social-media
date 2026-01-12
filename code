@@ -1,98 +1,62 @@
 # ----------------------------
-# Projet : Polarisation Reddit + Macro
+# Projet : Polarisation politique sur les réseaux
 # ----------------------------
 
-# Télechargement des données
+## Chargement des librairies
 
-install.packages("RedditExtractoR")
-library(redditExtractoR)
-
-install.packages("gtrendsR")
-library(gtrendsR)
-
-install.packages("fredr")
-library(fredr)
-
-install.packages("eurostat")
-library(eurostat)
-
+library(tidyverse)
 library(tidytext)
-library(dplyr)
 library(lubridate)
-library(tidyr)
-library(ggplot2)
+library(readxl)
+library(GGally)
 
-# ----------------------------
-# Définition des mots-clés
-# ----------------------------
+## Importation et nettoyage des données Twitter
 
-# Inflation 
-inflation_us <- fredr(series_id = "CPIAUCSL")
-inflation_eu <- get_eurostat("prc_hicp_midxp")
-
-# Chômage
-unemp_us <- fredr(series_id = "UNRATE")
-unemp_eu <- get_eurostat("une_rt_m", time_format = "date")
+tweets_clean <- tweets %>%
+  mutate(
+    date = as.Date(created_at),
+    text = str_to_lower(text)
+  ) %>%
+  filter(!is.na(text), !is.na(date))
 
 
-# ----------------------------
-# Définition des mots-clés par axe
-# ----------------------------
+## Définition des dictionnaires thématiques
 
-keywords_polarization <- c("polarization","culture war","radicalization",
-                           "extremism","echo chamber","us vs them")
-
-keywords_woke <- c("woke","social justice","equity","inclusion","diversity",
-                   "systemic racism","anti-woke","cancel culture")
-
-keywords_crisis <- c("economic crisis","inflation","recession","unemployment",
-                     "austerity","inequality","cost of living")
-
-keywords_authoritarian <- c("fascism","authoritarianism","populism",
-                            "illiberal democracy","nationalism")
-
-keywords_information <- c("censorship","misinformation","disinformation",
-                          "fake news","propaganda","media bias","algorithmic bias")
-
-keywords_green_pro <- c("eco-friendly","green","sustainability","climate justice",
-                        "green transition","carbon footprint","renewable energy","greenwashing")
-
-keywords_green_anti <- c("climate hoax")
-
-keywords_repression <- c("supremacy","supremacist","repression")
-
-# ----------------------------
-# Scraping Reddit par axe
-# ----------------------------
-
-collect_threads <- function(keywords_vector) {
-  find_thread_urls(keywords = keywords_vector, period = "year")
-}
-
-threads_list <- list(
-  threads_polarization  = collect_threads(keywords_polarization),
-  threads_woke          = collect_threads(keywords_woke),
-  threads_crisis        = collect_threads(keywords_crisis),
-  threads_authoritarian = collect_threads(keywords_authoritarian),
-  threads_information   = collect_threads(keywords_information),
-  threads_green_pro     = collect_threads(keywords_green_pro),
-  threads_green_anti    = collect_threads(keywords_green_anti),
-  threads_repression    = collect_threads(keywords_repression)
+keywords_polarization <- c(
+  "hate", "enemy", "traitor", "extreme", "radical", "division"
 )
 
-# ----------------------------
-# Fusion de tous les threads
-# ----------------------------
+keywords_woke <- c(
+  "woke", "cancel", "identity", "privilege", "oppression", "racism", "gender"
+)
 
-threads_all <- bind_rows(threads_list) %>%
-  distinct(url, .keep_all = TRUE)
+keywords_crisis <- c(
+  "inflation", "prices", "unemployment", "recession", "crisis", "poverty", "cost"
+)
 
-# Récupération des commentaires
-comments <- get_thread_content(threads_all$url)
+keywords_authoritarian <- c(
+  "authoritarian", "dictator", "control", "surveillance", "freedom"
+)
 
-# ----------------------------
-# Dictionnaire multi-axes + gauche/centre/droite
-# ----------------------------
+keywords_information <- c(
+  "media", "fake", "propaganda", "truth", "misinformation", "censorship", "news"
+)
+
+keywords_green_pro <- c(
+  "climate", "environment", "green", "renewable", "sustainability", "ecology",
+  "carbon", "transition"
+)
+
+keywords_green_anti <- c(
+  "climatehoax"
+)
+
+keywords_repression <- c(
+  "police", "repression", "violence"
+)
+
+
+## Construction du dictionnaire idéologique
 
 dictionary <- tibble(
   word = c(
@@ -116,60 +80,111 @@ dictionary <- tibble(
     rep("repression", length(keywords_repression))
   ),
   ideology = c(
-    rep("gauche", 6),  # polarisation gauche
-    rep("gauche", 7),  # woke
-    rep("centre", 7),  # crise économique
-    rep("droite", 5),  # authoritarian
-    rep("centre", 7),  # information
-    rep("gauche", 8),  # green pro
-    rep("droite", 1),  # green anti
-    rep("droite", 3)   # repression
+    rep("gauche", 6),
+    rep("gauche", 7),
+    rep("centre", 7),
+    rep("droite", 5),
+    rep("centre", 7),
+    rep("gauche", 8),
+    rep("droite", 1),
+    rep("droite", 3)
   )
 )
 
-# ----------------------------
-#  Analyse textuelle
-# ----------------------------
+## Tokenisation du texte
 
-tidy_comments <- comments %>%
-  unnest_tokens(word, comment)
+tweets_tokens <- tweets_clean %>%
+  unnest_tokens(word, text)
 
-ideology_mentions <- tidy_comments %>%
-  inner_join(dictionary, by = "word") %>%
-  mutate(month = floor_date(as.Date(created), "month")) %>%
-  count(month, ideology)
+## Identification des mots idéologiques
 
-# ----------------------------
-#  Création de l’indicateur synthétique de polarisation
-# ----------------------------
+tweets_ideology <- tweets_tokens %>%
+  inner_join(dictionary, by = "word")
 
-polarization_index <- ideology_mentions %>%
-  pivot_wider(names_from = ideology, values_from = n, values_fill = 0) %>%
-  mutate(
-    total = gauche + centre + droite,
-    prop_gauche = gauche/total,
-    prop_centre = centre/total,
-    prop_droite = droite/total,
-    polarization = sd(c(prop_gauche, prop_centre, prop_droite))
+## Comptage gauche vs droite
+
+ideology_daily <- tweets_ideology %>%
+  count(date, ideology) %>%
+  complete(
+    date,
+    ideology = c("gauche", "droite"),
+    fill = list(n = 0)
   )
 
-# ----------------------------
-#  Visualisation
-# ----------------------------
+## Construction de l’indicateur de polarisation
 
-ggplot(polarization_index, aes(x=month, y=polarization)) +
-  geom_line(color="darkred", size=1) +
+polarization_daily <- ideology_daily %>%
+  pivot_wider(
+    names_from = ideology,
+    values_from = n
+  ) %>%
+  mutate(
+    polarization = abs(gauche - droite) / (gauche + droite + 1)
+  )
+
+## Passage au niveau mensuel
+
+polarization_monthly <- polarization_daily %>%
+  mutate(month = floor_date(date, "month")) %>%
+  group_by(month) %>%
+  summarise(
+    polarization = mean(polarization, na.rm = TRUE)
+  )
+
+## Importation des données macroéconomiques (FRED)
+
+getSymbols(c("CPIAUCSL", "UNRATE"), src = "FRED")
+inflation_df <- tibble(
+  month = as.Date(index(CPIAUCSL)),
+  inflation = as.numeric(coredata(CPIAUCSL))
+)
+
+unemployment_df <- tibble(
+  month = as.Date(index(UNRATE)),
+  unemployment = as.numeric(coredata(UNRATE))
+)
+
+macro <- inflation_df %>%
+  inner_join(unemployment_df, by = "month")
+
+## Fusion discours-macroéconomie
+
+final_data <- polarization_monthly %>%
+  left_join(macro, by = "month") %>%
+  drop_na()
+
+## Régression économétrique
+
+model <- lm(
+  polarization ~ inflation + unemployment,
+  data = final_data
+)
+
+summary(model)
+
+## Visualisation conjointe
+
+ggplot(final_data, aes(x = month)) +
+  geom_line(aes(y = polarization), color = "red", linewidth = 1) +
+  geom_line(aes(y = scale(inflation)), linetype = "dashed", linewidth = 1) +
   theme_minimal() +
   labs(
-    title = "Indice mensuel de polarisation gauche/centre/droite",
-    x = "Mois",
-    y = "Polarisation (écart-type des proportions)"
+    title = "Polarisation idéologique sur Twitter et tensions macroéconomiques",
+    subtitle = "Indice basé sur un dictionnaire idéologique thématique",
+    y = "Valeurs normalisées",
+    x = "Date"
   )
 
-# ----------------------------
-#  Sauvegarde des résultats
-# ----------------------------
+## Corrélations
 
-saveRDS(threads_all, "data/clean/threads_all.rds")
-saveRDS(comments, "data/clean/comments.rds")
-saveRDS(polarization_index, "data/clean/polarization_index.rds")
+cor_table <- final_data %>%
+  select(polarization, inflation, unemployment) %>%
+  cor(use = "complete.obs")
+print(cor_table)
+
+ggcorr(final_data %>% select(polarization, inflation, unemployment),
+       label = TRUE, 
+       label_round = 2, 
+       hjust = 0.8,
+       size = 5,
+       low = "blue", high = "red")
