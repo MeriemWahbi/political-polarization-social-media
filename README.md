@@ -87,17 +87,6 @@ Les indicateurs de polarisation sont agrégés à une fréquence mensuelle afin 
 Une analyse descriptive est complétée par des régressions linéaires simples visant à étudier la relation entre la polarisation politique et les variables macroéconomiques. L’objectif est d’évaluer si les périodes de tensions économiques sont associées à une intensification des discours polarisés sur la plateforme.
 
 
-### Automatisation du projet
-
-Le script `run_project.R` permet d’exécuter l’ensemble du pipeline :
-- nettoyage des tweets
-- calcul de l’indice de polarisation
-- importation des données macroéconomiques
-- fusion des données
-- génération automatique des slides HTML
-
-Cette automatisation garantit la **reproductibilité** complète du projet.
-
 ### Limites
 
 - Données issues d’une seule plateforme
