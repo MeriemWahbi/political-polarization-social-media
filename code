@@ -1,5 +1,5 @@
 # ----------------------------
-# Projet : Polarisation politique sur les réseaux
+# Projet : Polarisation politique sur les réseaux (X / Twitter)
 # ----------------------------
 
 ## Chargement des librairies
@@ -11,6 +11,8 @@ library(readxl)
 library(GGally)
 
 ## Importation et nettoyage des données Twitter
+
+tweets <- read_excel(file.choose())
 
 tweets_clean <- tweets %>%
   mutate(
