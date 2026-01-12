@@ -42,13 +42,12 @@ Les données utilisées ne sont pas collectées directement via l’API officiel
 - **`lubridate`** : gestion des dates
 - **`rmarkdown`** : génération des slides et du rapport HTML
 
+
 ## IV. Outils
 
 Le projet est réalisé sous **R**, en mobilisant des méthodes de collecte de données, d’analyse textuelle, de statistiques descriptives et de visualisation.  
 Ce travail s’inscrit dans une démarche exploratoire visant à mieux comprendre les interactions entre dynamiques économiques et comportements politiques sur les plateformes numériques.
 
-Le projet est entièrement automatisé grâce au script principal (run_project.R) qui exécute l’ensemble du pipeline d’analyse : nettoyage des données issues de X, calcul de l’indice de polarisation, importation des données macroéconomiques et génération des visualisations et des slides HTML.
-Une tâche planifiée via le package cronR permet d’exécuter ce script automatiquement à une fréquence mensuelle, garantissant ainsi la mise à jour régulière des résultats lorsque de nouvelles données deviennent disponibles.
 
 ## V. Méthodologie
 
@@ -105,9 +104,13 @@ Cette automatisation garantit la **reproductibilité** complète du projet.
 - Approche basée sur l’analyse de sentiment, qui simplifie la complexité idéologique
 - Absence d’identification causale stricte
 
+
 ## VI. Conclusion et usages
 
 Ce projet met en évidence le rôle central des réseaux sociaux dans la structuration du débat politique contemporain et suggère un lien entre la dégradation des conditions macroéconomiques et l’intensification de la polarisation politique. Il constitue une base solide pour des analyses futures intégrant des méthodes de NLP plus avancées ou une comparaison entre plusieurs plateformes.
+
+
+
 
 
 ### Auteurs
